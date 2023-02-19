@@ -52,7 +52,12 @@ profile-*
 .vscode
 *code-workspace
 
+# vim
+.vim
+
 # clinic
 profile*
 *clinic*
 *flamegraph*
+
+dist
