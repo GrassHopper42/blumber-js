@@ -1,5 +1,6 @@
-import Fastify, { FastifyHttpOptions } from 'fastify';
-import { Server } from 'http';
-const app = (opts: FastifyHttpOptions<Server> | undefined) => Fastify(opts);
+import Fastify, { FastifyServerOptions } from 'fastify';
+export default (opts?: FastifyServerOptions) => {
+  const fastify = Fastify(opts);
 
-export default app;
+  return fastify;
+};
