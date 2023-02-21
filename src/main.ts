@@ -1,11 +1,19 @@
-import Fastify from 'fastify';
+import AutoLoad from '@fastify/autoload';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { logger } from './utils/logger.js';
+import app from './app.js';
 
-const server = Fastify({
-  logger: true,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const server = app({
+  logger,
 });
 
-server.get('/', async (request, reply) => {
-  return 'Hello World!';
+server.register(AutoLoad, {
+  dir: path.join(__dirname, 'plugins'),
+  forceESM: true,
 });
 
 server.listen({ port: 3000 }, (err, address) => {
