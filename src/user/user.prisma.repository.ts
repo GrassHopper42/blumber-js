@@ -1,12 +1,10 @@
-import { FastifyPluginAsync } from 'fastify';
+import { PrismaClient } from '@prisma/client';
 import { UserRepository } from './interface/user.repository';
 import { User } from './user.model';
 
-export const userRepository: FastifyPluginAsync = async (fastify) => {
-  const prisma = fastify.db;
-
-  const repo: UserRepository = {
-    createUser: async (user: any): Promise<User> => {
+export const userRepository = (prisma: PrismaClient): UserRepository => {
+  return {
+    create: async (user: any): Promise<User> => {
       const newUser = await prisma.user.create({
         data: {
           name: user.name,
@@ -15,7 +13,7 @@ export const userRepository: FastifyPluginAsync = async (fastify) => {
       });
       return newUser;
     },
-    getUser: async (id: number): Promise<User | null> => {
+    find: async (id: number): Promise<User | null> => {
       const user = await prisma.user.findUnique({
         where: {
           id: id,
@@ -23,11 +21,11 @@ export const userRepository: FastifyPluginAsync = async (fastify) => {
       });
       return user;
     },
-    getUserList: async (): Promise<User[]> => {
+    findAll: async (): Promise<User[]> => {
       const userList = await prisma.user.findMany();
       return userList;
     },
-    updateUser: async (id: number, user: any): Promise<User> => {
+    update: async (id: number, user: any): Promise<User> => {
       const updatedUser = await prisma.user.update({
         where: {
           id: id,
@@ -40,6 +38,4 @@ export const userRepository: FastifyPluginAsync = async (fastify) => {
       return updatedUser;
     },
   };
-
-  fastify.decorate('userRepository', repo);
 };
