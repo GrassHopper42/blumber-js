@@ -1,4 +1,4 @@
-import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import { UserService } from './interface/user.service';
 
 type GetUsersRequest = FastifyRequest<{
@@ -10,24 +10,24 @@ type GetUsersRequest = FastifyRequest<{
 export const userController: FastifyPluginAsync = async (fastify) => {
   const service: UserService = fastify.userService;
 
-  fastify.get('/users', async (_request, reply) => {
+  fastify.get('/', async (_request, reply) => {
     const userList = await service.getUserList();
     reply.send(userList);
   });
 
-  fastify.get('/users/:id', async (request: GetUsersRequest, reply) => {
+  fastify.get('/:id', async (request: GetUsersRequest, reply) => {
     const { id } = request.params;
     const user = await service.getUser(id);
     reply.send(user);
   });
 
-  fastify.post('/users', async (request, reply) => {
+  fastify.post('/', async (request, reply) => {
     const { body } = request;
     const user = await service.createUser(body);
     reply.send(user);
   });
 
-  fastify.put('/users/:id', async (request: GetUsersRequest, reply) => {
+  fastify.put('/:id', async (request: GetUsersRequest, reply) => {
     const { id } = request.params;
     const { body } = request;
     const user = await service.updateUser(id, body);

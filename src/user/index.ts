@@ -24,7 +24,7 @@ const userServicePlugin = fp(async (fastify) => {
 const userModule = async (fastify: FastifyInstance) => {
   fastify.register(userRepositoryPlugin);
   fastify.register(userServicePlugin);
-  fastify.register(userController);
+  fastify.register(userController, { prefix: '/user' });
 };
 
 export default userModule;
