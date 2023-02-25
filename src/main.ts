@@ -1,20 +1,14 @@
-import AutoLoad from '@fastify/autoload';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { logger } from './utils/logger.js';
 import app from './app.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import postModule from './post/index.js';
+import userModule from './user/index.js';
 
 const server = app({
   logger,
 });
 
-server.register(AutoLoad, {
-  dir: path.join(__dirname, 'plugins'),
-  forceESM: true,
-});
+server.register(postModule);
+server.register(userModule);
 
 server.listen({ port: 3000 }, (err, address) => {
   if (err) {

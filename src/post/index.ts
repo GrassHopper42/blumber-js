@@ -1,21 +1,32 @@
-import { FastifyPluginAsync } from 'fastify';
 import { postController } from './post.controller';
 import { postService } from './post.service';
 import { postRepository } from './post.prisma.repository';
 import { PostService } from './interface/post.service';
 import { PostRepository } from './interface/post.repository';
+import fp from 'fastify-plugin';
+import { FastifyPluginAsync } from 'fastify';
+import { PrismaClient } from '@prisma/client';
 
 declare module 'fastify' {
   interface FastifyInstance {
+    db: PrismaClient;
     postService: PostService;
     postRepository: PostRepository;
   }
 }
 
-const postModule: FastifyPluginAsync = async (fastify) => {
+const postRepositoryPlugin: FastifyPluginAsync = fp(async (fastify) => {
+  fastify.decorate('postRepository', postRepository(fastify.db));
+});
+
+const postServicePlugin = fp(async (fastify) => {
+  fastify.decorate('postService', postService(fastify.postRepository));
+});
+
+const postModule = fp(async (fastify) => {
   fastify.register(postController, { prefix: '/post' });
-  fastify.register(postService);
-  fastify.register(postRepository);
-};
+  fastify.register(postRepositoryPlugin);
+  fastify.register(postServicePlugin);
+});
 
 export default postModule;

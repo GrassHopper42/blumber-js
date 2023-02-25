@@ -1,12 +1,10 @@
 import { Post } from './post.model';
-import { FastifyPluginAsync } from 'fastify';
 import { PostRepository } from './interface/post.repository';
+import { PrismaClient } from '@prisma/client';
 
-export const postRepository: FastifyPluginAsync = async (fastify) => {
-  const { db } = fastify;
-
-  const repository: PostRepository = {
-    async createPost(post: any) {
+export const postRepository = (db: PrismaClient): PostRepository => {
+  return {
+    async create(post: any) {
       return await db.post.create({
         data: {
           ...post,
@@ -14,7 +12,7 @@ export const postRepository: FastifyPluginAsync = async (fastify) => {
       });
     },
 
-    async getPost(id: number) {
+    async find(id: number) {
       return await db.post.findUnique({
         where: {
           id,
@@ -22,11 +20,11 @@ export const postRepository: FastifyPluginAsync = async (fastify) => {
       });
     },
 
-    async getAllPosts() {
+    async findAll() {
       return await db.post.findMany();
     },
 
-    async updatePost(id: number, post: any): Promise<Post> {
+    async update(id: number, post: any): Promise<Post> {
       return await db.post.update({
         where: {
           id,
@@ -37,7 +35,7 @@ export const postRepository: FastifyPluginAsync = async (fastify) => {
       });
     },
 
-    async deletePost(id: number): Promise<any> {
+    async delete(id: number): Promise<any> {
       return await db.post.delete({
         where: {
           id,
@@ -45,6 +43,4 @@ export const postRepository: FastifyPluginAsync = async (fastify) => {
       });
     },
   };
-
-  fastify.decorate('postRepository', repository);
 };

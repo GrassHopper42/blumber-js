@@ -1,26 +1,22 @@
-import { FastifyPluginAsync } from 'fastify';
+import { PostRepository } from './interface/post.repository';
 import { PostService } from './interface/post.service';
 
-export const postService: FastifyPluginAsync = async (fastify) => {
-  const { postRepository } = fastify;
-
-  const service: PostService = {
+export const postService = (postRepository: PostRepository): PostService => {
+  return {
     async createPost(post: any) {
-      return await postRepository.createPost(post);
+      return await postRepository.create(post);
     },
 
     async getPost(id: number) {
-      return await postRepository.getPost(id);
+      return await postRepository.find(id);
     },
 
     async getPostList() {
-      return await postRepository.getAllPosts();
+      return await postRepository.findAll();
     },
 
     async updatePost(id: number, post: any) {
-      return await postRepository.updatePost(id, post);
+      return await postRepository.update(id, post);
     },
   };
-
-  fastify.decorate('postService', service);
 };
