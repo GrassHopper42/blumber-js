@@ -3,18 +3,18 @@ import { PrismaClient } from '@prisma/client';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    prisma: PrismaClient;
+    db: PrismaClient;
   }
 }
 
-export default fp(async (fastify, opts) => {
+export default fp(async (fastify, _opts) => {
   const prisma = new PrismaClient();
 
   await prisma.$connect();
 
-  fastify.decorate('prisma', prisma);
+  fastify.decorate('db', prisma);
 
   fastify.addHook('onClose', async (fastify) => {
-    await fastify.prisma.$disconnect();
+    await fastify.db.$disconnect();
   });
 });

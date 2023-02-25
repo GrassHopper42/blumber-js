@@ -1,4 +1,4 @@
-import { Post } from '../post.model.js';
+import { Post } from '../post.model';
 
 export type PostService = {
   createPost(post: any): Promise<Post>;

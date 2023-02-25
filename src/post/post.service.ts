@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify';
-import { PostService } from './interface/post.service.js';
+import { PostService } from './interface/post.service';
 
 export const postService: FastifyPluginAsync = async (fastify) => {
   const { postRepository } = fastify;

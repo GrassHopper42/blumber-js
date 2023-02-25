@@ -1,9 +1,9 @@
 import { FastifyPluginAsync } from 'fastify';
-import { postController } from './post.controller.js';
-import { postService } from './post.service.js';
-import { postRepository } from './post.prisma.repository.js';
-import { PostService } from './interface/post.service.js';
-import { PostRepository } from './interface/post.repository.js';
+import { postController } from './post.controller';
+import { postService } from './post.service';
+import { postRepository } from './post.prisma.repository';
+import { PostService } from './interface/post.service';
+import { PostRepository } from './interface/post.repository';
 
 declare module 'fastify' {
   interface FastifyInstance {
