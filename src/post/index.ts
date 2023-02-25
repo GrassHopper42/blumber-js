@@ -5,11 +5,9 @@ import { PostService } from './interface/post.service';
 import { PostRepository } from './interface/post.repository';
 import fp from 'fastify-plugin';
 import { FastifyPluginAsync } from 'fastify';
-import { PrismaClient } from '@prisma/client';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    db: PrismaClient;
     postService: PostService;
     postRepository: PostRepository;
   }
