@@ -5,8 +5,9 @@
   "type": "module",
   "main": "src/main.ts",
   "scripts": {
-    "start": "node --loader ts-node/esm src/main.ts",
-    "dev": "nodemon --watch src --exec ts-node --esm src/main.ts | pino-pretty -t -c"
+    "start": "node --loader ts-node/esm --experimental-specifier-resolution=node src/main.ts",
+    "dev": "nodemon --watch src --exec ts-node --esm --experimental-specifier-resolution=node src/main.ts | pino-pretty -t -c",
+    "test": "vitest --run --reporter verbose"
   },
   "keywords": [],
   "author": "",
