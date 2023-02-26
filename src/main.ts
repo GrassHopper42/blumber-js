@@ -1,4 +1,4 @@
-import { logger } from './utils/logger.js';
+import { logger } from './lib/logger.js';
 import app from './app.js';
 import postModule from './post/index.js';
 import userModule from './user/index.js';

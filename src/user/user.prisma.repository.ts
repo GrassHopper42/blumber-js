@@ -7,8 +7,7 @@ export const userRepository = (prisma: PrismaClient): UserRepository => {
     create: async (user: any): Promise<User> => {
       const newUser = await prisma.user.create({
         data: {
-          name: user.name,
-          email: user.email,
+          ...user,
         },
       });
       return newUser;

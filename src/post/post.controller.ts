@@ -1,4 +1,4 @@
-import { ZodFastifyPluginAsync } from 'src/utils/types';
+import { ZodFastifyPluginAsync } from 'src/lib/types';
 import {
   createSchema,
   deleteSchema,
