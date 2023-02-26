@@ -2532,6 +2532,7 @@ __metadata:
     fastify-cli: ^5.7.1
     fastify-jwt: ^4.2.0
     fastify-plugin: ^4.0.0
+    fastify-type-provider-zod: ^1.1.9
     nodemon: ^2.0.20
     pino-pretty: ^9.3.0
     prettier: ^2.8.4
@@ -2540,6 +2541,7 @@ __metadata:
     ts-node: ^10.9.1
     typescript: ^4.9.5
     vitest: ^0.28.5
+    zod: ^3.20.6
   languageName: unknown
   linkType: soft
 
@@ -3814,6 +3816,18 @@ __metadata:
   version: 4.5.0
   resolution: "fastify-plugin@npm:4.5.0"
   checksum: 3cc36a43ec72ee9974d3cd1989027e77b277b0994e4fc02ed4e6492aabd83a0be66f14fdec56e60d9a41911ea1ff1ea70c9d957a87e46bcdb8fedd859f4988fe
+  languageName: node
+  linkType: hard
+
+"fastify-type-provider-zod@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "fastify-type-provider-zod@npm:1.1.9"
+  dependencies:
+    zod-to-json-schema: ^3.17.1
+  peerDependencies:
+    fastify: ^4.0.0
+    zod: ^3.14.2
+  checksum: 86792031057cf3807a2e77ef41b16161d94c89ab95bd6284574502351df9c4d1e1621d4f7e7f3f14cd81aec9923c3a4f61c8889d5abb3b57e52ee9c0015056e1
   languageName: node
   linkType: hard
 
@@ -7931,5 +7945,21 @@ __metadata:
   dependencies:
     "@types/yoga-layout": 1.9.2
   checksum: 6954c7c7b04c585a1c974391bea4734611adb85702b5e9131549a1d3dc5b94e69bcfea34121cdaeb5e702663bf290fcce5374910128e54d1031503a57c062865
+  languageName: node
+  linkType: hard
+
+"zod-to-json-schema@npm:^3.17.1":
+  version: 3.20.4
+  resolution: "zod-to-json-schema@npm:3.20.4"
+  peerDependencies:
+    zod: ^3.20.0
+  checksum: 55bc649dbc82ce25fbfbfdd42ca530d883d83be5d02cb81e89f6401d54bca151fc6b8cc57999c75eb6a3dcaa3f000697315fbd4f505637472621570ed52784d8
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.20.6":
+  version: 3.20.6
+  resolution: "zod@npm:3.20.6"
+  checksum: 804b1934b8b5e2fa3750bec90043e8118b201f330b9957b8b768389a971acadf812d2060cf62921086512dab4af691d10490acb03333da58fc485c0791893c89
   languageName: node
   linkType: hard

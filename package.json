@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --loader ts-node/esm --experimental-specifier-resolution=node src/main.ts",
     "dev": "nodemon --watch src --exec ts-node --esm --experimental-specifier-resolution=node src/main.ts | pino-pretty -t -c",
-    "test": "vitest --run --reporter verbose"
+    "test": "NODE_ENV=test vitest --run --reporter verbose"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +21,9 @@
     "fastify-cli": "^5.7.1",
     "fastify-jwt": "^4.2.0",
     "fastify-plugin": "^4.0.0",
-    "prisma": "^4.10.1"
+    "fastify-type-provider-zod": "^1.1.9",
+    "prisma": "^4.10.1",
+    "zod": "^3.20.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
