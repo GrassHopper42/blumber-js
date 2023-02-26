@@ -5,4 +5,5 @@ export type PostService = {
   getPost(id: number): Promise<Post | null>;
   getPostList(): Promise<Post[]>;
   updatePost(id: number, post: any): Promise<Post>;
+  deletePost(id: number): Promise<void>;
 };

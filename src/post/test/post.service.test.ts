@@ -32,6 +32,7 @@ describe('PostService Test', () => {
     const actual = await service.createPost(post);
 
     expect(actual).toEqual(expected);
+    expect(mockRepo.create).toBeCalledWith(post);
   });
 
   it('should get all posts', async () => {
@@ -47,6 +48,7 @@ describe('PostService Test', () => {
     const actual = await service.getPostList();
 
     expect(actual).toEqual(expected);
+    expect(mockRepo.findAll).toBeCalled();
   });
 
   it('should get a post', async () => {
@@ -61,6 +63,7 @@ describe('PostService Test', () => {
     const actual = await service.getPost(postId);
 
     expect(actual).toEqual(expected);
+    expect(mockRepo.find).toBeCalledWith(postId);
   });
 
   it('should update a post', async () => {
@@ -78,5 +81,6 @@ describe('PostService Test', () => {
     const actual = await service.updatePost(postId, post);
 
     expect(actual).toEqual(expected);
+    expect(mockRepo.update).toBeCalledWith(postId, post);
   });
 });

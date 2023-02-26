@@ -1,4 +1,8 @@
 import Fastify, { FastifyServerOptions } from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 import prismaPlugin from './plugins/prisma';
 // import AutoLoad from '@fastify/autoload';
 // import path from 'path';
@@ -15,6 +19,8 @@ export default (opts?: FastifyServerOptions) => {
   //   forceESM: true,
   // });
   fastify.register(prismaPlugin);
+  fastify.setValidatorCompiler(validatorCompiler);
+  fastify.setSerializerCompiler(serializerCompiler);
 
   return fastify;
 };

@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 export const postRepository = (db: PrismaClient): PostRepository => {
   return {
-    async create(post: any) {
+    async create(post: Pick<Post, 'title' | 'content' | 'authorId'>) {
       return await db.post.create({
         data: {
           ...post,
@@ -24,7 +24,7 @@ export const postRepository = (db: PrismaClient): PostRepository => {
       return await db.post.findMany();
     },
 
-    async update(id: number, post: any): Promise<Post> {
+    async update(id: number, post: Partial<Omit<Post, 'id'>>): Promise<Post> {
       return await db.post.update({
         where: {
           id,

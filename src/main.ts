@@ -2,10 +2,11 @@ import { logger } from './utils/logger.js';
 import app from './app.js';
 import postModule from './post/index.js';
 import userModule from './user/index.js';
+import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 const server = app({
   logger,
-});
+}).withTypeProvider<ZodTypeProvider>();
 
 server.register(postModule);
 server.register(userModule);
