@@ -3,6 +3,8 @@ import {
   createSchema,
   deleteSchema,
   findByIdSchema,
+  getAllVersionsSchema,
+  getVersionSchema,
   updateSchema,
 } from './schema';
 
@@ -32,17 +34,49 @@ export const postController: ZodFastifyPluginAsync = async (fastify) => {
       reply.code(200).send({
         ...post,
         createdAt: post.createdAt.toString(),
-        updatedAt: post.updatedAt.toString(),
       });
     } else {
       reply.code(404).send({ message: 'Post not found' });
     }
   });
 
+  fastify.get(
+    '/:id/version',
+    { schema: getAllVersionsSchema },
+    async (request, reply) => {
+      const versions = await postService.getAllVersions(request.params.id);
+      reply.send(
+        versions.map((version) => ({
+          ...version,
+          createdAt: version.createdAt.toString(),
+        })),
+      );
+    },
+  );
+
+  fastify.get(
+    '/:id/version/:version',
+    { schema: getVersionSchema },
+    async (request, reply) => {
+      const version = await postService.getVersion(
+        request.params.id,
+        request.params.version,
+      );
+      if (version) {
+        reply.code(200).send({
+          ...version,
+          createdAt: version.createdAt.toString(),
+        });
+      } else {
+        reply.code(404).send({ message: 'Version not found' });
+      }
+    },
+  );
+
   //update a post
   fastify.put('/:id', { schema: updateSchema }, async (request, reply) => {
-    const post = await postService.updatePost(request.params.id, request.body);
-    reply.code(200).send(post);
+    await postService.updatePost(request.params.id, request.body);
+    reply.code(200);
   });
 
   //delete a post

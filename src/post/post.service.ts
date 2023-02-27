@@ -1,23 +1,59 @@
-import { Post } from '@prisma/client';
 import { PostRepository } from './interface/post.repository';
 import { PostService } from './interface/post.service';
+import { VersionRepository } from './interface/version.repository';
 
-export const postService = (postRepository: PostRepository): PostService => {
+export const postService = (
+  postRepository: PostRepository,
+  versionRepository: VersionRepository,
+): PostService => {
   return {
-    async createPost(post: Pick<Post, 'title' | 'content' | 'authorId'>) {
-      return await postRepository.create(post);
+    async createPost({ title, content, authorId }) {
+      const post = await postRepository.create({ title, authorId });
+      await versionRepository.create({
+        postId: post.id,
+        content,
+      });
     },
 
-    async getPost(id: number) {
-      return await postRepository.find(id);
+    async getPost(postId: number) {
+      const post = await postRepository.findById(postId);
+      if (!post) return null;
+      const version = await versionRepository.getLastVersion(postId);
+      if (!version) throw new Error('version not found');
+      return {
+        ...post,
+        ...version,
+      };
     },
 
     async getPostList() {
       return await postRepository.findAll();
     },
 
-    async updatePost(id: number, post: Partial<Omit<Post, 'id'>>) {
-      return await postRepository.update(id, post);
+    async getAllVersions(postId: number) {
+      return await versionRepository.findAllByPostId(postId);
+    },
+
+    async getVersion(postId: number, version: number) {
+      return await versionRepository.findByPostIdAndVersion({
+        postId,
+        version,
+      });
+    },
+
+    async updatePost(id: number, post: { title?: string; content?: string }) {
+      if (post.title) {
+        await postRepository.update(id, post);
+      }
+      if (post.content) {
+        const lastVersion = await versionRepository.getLastVersion(id);
+        if (!lastVersion) throw new Error('version not found');
+        await versionRepository.create({
+          postId: id,
+          content: post.content,
+          version: lastVersion.version + 1,
+        });
+      }
     },
 
     async deletePost(id: number) {

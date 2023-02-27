@@ -4,6 +4,7 @@ export const createSchema = {
   body: z.object({
     title: z.string(),
     content: z.string(),
+    authorId: z.number(),
   }),
   response: {
     201: z.object({}),

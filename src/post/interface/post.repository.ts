@@ -1,9 +1,12 @@
 import { Post } from '../post.model';
 
 export type PostRepository = {
-  create(post: Pick<Post, 'title' | 'content' | 'authorId'>): Promise<Post>;
-  find(id: number): Promise<Post | null>;
+  create(data: { authorId: number; title: string }): Promise<Post>;
+  findById(id: number): Promise<Post | null>;
   findAll(): Promise<Post[]>;
-  update(id: number, post: any): Promise<Post>;
+  update(
+    id: number,
+    post: Partial<Omit<Post, 'authorId' | 'id'>>,
+  ): Promise<Post>;
   delete(id: number): Promise<any>;
 };

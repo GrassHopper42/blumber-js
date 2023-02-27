@@ -1,18 +1,16 @@
-import { Post } from './post.model';
-import { PostRepository } from './interface/post.repository';
+import { Post } from '../post.model';
+import { PostRepository } from '../interface/post.repository';
 import { PrismaClient } from '@prisma/client';
 
 export const postRepository = (db: PrismaClient): PostRepository => {
   return {
-    async create(post: Pick<Post, 'title' | 'content' | 'authorId'>) {
+    async create(data: { authorId: number; title: string }): Promise<Post> {
       return await db.post.create({
-        data: {
-          ...post,
-        },
+        data,
       });
     },
 
-    async find(id: number) {
+    async findById(id: number) {
       return await db.post.findUnique({
         where: {
           id,
@@ -24,7 +22,10 @@ export const postRepository = (db: PrismaClient): PostRepository => {
       return await db.post.findMany();
     },
 
-    async update(id: number, post: Partial<Omit<Post, 'id'>>): Promise<Post> {
+    async update(
+      id: number,
+      post: Partial<Omit<Post, 'authorId' | 'id'>>,
+    ): Promise<Post> {
       return await db.post.update({
         where: {
           id,

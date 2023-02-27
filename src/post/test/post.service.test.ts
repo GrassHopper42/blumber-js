@@ -1,86 +1,171 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
 import { PostRepository } from '../interface/post.repository';
 import { PostService } from '../interface/post.service';
+import { VersionRepository } from '../interface/version.repository';
 import { postService } from '../post.service';
 
 describe('PostService Test', () => {
-  let service: PostService;
-  let mockRepo: PostRepository;
+  let postRepo: PostRepository = mock<PostRepository>();
+  let versionRepo: VersionRepository = mock<VersionRepository>();
+  let service: PostService = postService(postRepo, versionRepo);
 
-  beforeAll(() => {
-    mockRepo = {
-      create: vi.fn(),
-      delete: vi.fn(),
-      findAll: vi.fn(),
-      find: vi.fn(),
-      update: vi.fn(),
-    };
-    service = postService(mockRepo);
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('should create a post', async () => {
-    const post = {
-      title: 'Post Title',
-      content: 'Post Content',
-    };
-    const expected = {
-      id: 1,
-      ...post,
-    };
-    mockRepo.create = vi.fn().mockResolvedValueOnce(expected);
+  describe('Create Test', () => {
+    it('should create post version', async () => {
+      // given
+      const post = {
+        title: 'Post Title',
+        content: 'Post Content',
+        authorId: 1,
+      };
+      postRepo.create = vi.fn().mockResolvedValueOnce({
+        id: 1,
+      });
 
-    const actual = await service.createPost(post);
+      // when
+      await service.createPost(post);
 
-    expect(actual).toEqual(expected);
-    expect(mockRepo.create).toBeCalledWith(post);
+      // then
+      expect(postRepo.create).toBeCalledWith({
+        authorId: 1,
+        title: 'Post Title',
+      });
+      expect(versionRepo.create).toBeCalledWith({
+        postId: 1,
+        content: post.content,
+      });
+    });
   });
 
-  it('should get all posts', async () => {
-    const expected = [
-      {
+  describe('Read Test', () => {
+    it('should get all posts', async () => {
+      const expected = [
+        {
+          id: 1,
+          title: 'Post Title',
+        },
+      ];
+      postRepo.findAll = vi.fn().mockResolvedValueOnce(expected);
+
+      const actual = await service.getPostList();
+
+      expect(actual).toEqual(expected);
+      expect(postRepo.findAll).toBeCalled();
+    });
+
+    it('should get a post with lastVersion', async () => {
+      // given
+      const postId = 1;
+      const expected = {
         id: 1,
         title: 'Post Title',
         content: 'Post Content',
-      },
-    ];
-    mockRepo.findAll = vi.fn().mockResolvedValueOnce(expected);
+      };
+      postRepo.findById = vi.fn().mockResolvedValueOnce({
+        id: 1,
+        title: 'Post Title',
+      });
+      versionRepo.getLastVersion = vi.fn().mockResolvedValueOnce({
+        content: 'Post Content',
+      });
 
-    const actual = await service.getPostList();
+      // when
+      const actual = await service.getPost(postId);
 
-    expect(actual).toEqual(expected);
-    expect(mockRepo.findAll).toBeCalled();
+      // then
+      expect(actual).toEqual(expected);
+      expect(postRepo.findById).toBeCalledWith(postId);
+      expect(versionRepo.getLastVersion).toBeCalledWith(postId);
+    });
   });
 
-  it('should get a post', async () => {
-    const postId = 1;
-    const expected = {
-      id: 1,
-      title: 'Post Title',
-      content: 'Post Content',
-    };
-    mockRepo.find = vi.fn().mockResolvedValueOnce(expected);
+  describe('Update Test', () => {
+    it('should update title and should not update version', async () => {
+      // given
+      const postId = 1;
+      const post = {
+        title: 'Post Title',
+      };
+      const expected = {
+        id: 1,
+        ...post,
+      };
+      postRepo.update = vi.fn().mockResolvedValueOnce(expected);
 
-    const actual = await service.getPost(postId);
+      // when
+      await service.updatePost(postId, post);
 
-    expect(actual).toEqual(expected);
-    expect(mockRepo.find).toBeCalledWith(postId);
-  });
+      // then
+      expect(postRepo.update).toBeCalledWith(postId, post);
+      expect(versionRepo.create).not.toBeCalled();
+    });
 
-  it('should update a post', async () => {
-    const postId = 1;
-    const post = {
-      title: 'Post Title',
-      content: 'Post Content',
-    };
-    const expected = {
-      id: 1,
-      ...post,
-    };
-    mockRepo.update = vi.fn().mockResolvedValueOnce(expected);
+    it('should update title and content and should create version', async () => {
+      // given
+      const postId = 1;
+      const post = {
+        title: 'Post Title',
+        content: 'Post Content',
+      };
+      const expected = {
+        id: 1,
+        ...post,
+      };
+      postRepo.update = vi.fn().mockResolvedValueOnce(expected);
+      versionRepo.getLastVersion = vi.fn().mockResolvedValueOnce({
+        content: 'Post Content',
+        version: 1,
+      });
+      versionRepo.create = vi.fn().mockResolvedValueOnce({
+        id: 1,
+        postId: 1,
+        content: 'Post Content',
+        version: 2,
+      });
 
-    const actual = await service.updatePost(postId, post);
+      // when
+      await service.updatePost(postId, post);
 
-    expect(actual).toEqual(expected);
-    expect(mockRepo.update).toBeCalledWith(postId, post);
+      // then
+      expect(postRepo.update).toBeCalledWith(postId, post);
+      expect(versionRepo.create).toBeCalledWith({
+        postId,
+        content: post.content,
+        version: 2,
+      });
+    });
+
+    it('should update version and should not update title', async () => {
+      // given
+      const postId = 1;
+      const post = {
+        content: 'Post Content1',
+      };
+      versionRepo.getLastVersion = vi.fn().mockResolvedValueOnce({
+        content: 'Post Content1',
+        version: 1,
+      });
+      versionRepo.create = vi.fn().mockResolvedValueOnce({
+        id: 1,
+        postId: 1,
+        content: 'Post Content2',
+        version: 2,
+      });
+
+      // when
+      await service.updatePost(postId, post);
+
+      // then
+      expect(postRepo.update).not.toBeCalled();
+      expect(versionRepo.create).toBeCalledWith({
+        postId,
+        content: post.content,
+        version: 2,
+      });
+    });
   });
 });
