@@ -6,7 +6,7 @@
   "main": "src/main.ts",
   "scripts": {
     "start": "node --loader ts-node/esm --experimental-specifier-resolution=node src/main.ts",
-    "dev": "nodemon --watch src --exec ts-node --esm --experimental-specifier-resolution=node src/main.ts | pino-pretty -t -c",
+    "dev": "NODE_ENV=development nodemon --watch src --exec ts-node --esm --experimental-specifier-resolution=node src/main.ts | pino-pretty -t -c",
     "test": "NODE_ENV=test vitest --run --reporter verbose --coverage",
     "coverage": "NODE_ENV=test vitest run --coverage"
   },

@@ -9,7 +9,7 @@ export const userService = (repo: UserRepository): UserService => {
       return newUser;
     },
     getUser: async (id: number): Promise<User | null> => {
-      const user = await repo.find(id);
+      const user = await repo.findById(id);
       return user;
     },
     getUserList: async (): Promise<User[]> => {

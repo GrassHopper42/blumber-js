@@ -1,20 +1,15 @@
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { mock } from 'vitest-mock-extended';
 import { UserRepository } from '../interface/user.repository';
 import { UserService } from '../interface/user.service';
 import { userService } from '../user.service';
 
 describe('UserService Test', () => {
-  let mockRepo: UserRepository;
-  let service: UserService;
+  let mockRepo: UserRepository = mock<UserRepository>();
+  let service: UserService = userService(mockRepo);
 
-  beforeAll(async () => {
-    mockRepo = {
-      create: vi.fn(),
-      find: vi.fn(),
-      findAll: vi.fn(),
-      update: vi.fn(),
-    };
-    service = userService(mockRepo);
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -43,7 +38,7 @@ describe('UserService Test', () => {
 
   it('should return a user', async () => {
     // given
-    mockRepo.find = vi.fn().mockResolvedValueOnce({
+    mockRepo.findById = vi.fn().mockResolvedValueOnce({
       id: 1,
       name: 'John Doe',
       email: 'test@test.com',
@@ -53,7 +48,7 @@ describe('UserService Test', () => {
     const user = await service.getUser(1);
 
     // then
-    expect(mockRepo.find).toBeCalledWith(1);
+    expect(mockRepo.findById).toBeCalledWith(1);
     expect(user).toEqual({
       id: 1,
       name: 'John Doe',

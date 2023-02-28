@@ -4,6 +4,7 @@ type LoggerOptions = {
 const envToLogger: LoggerOptions = {
   development: {
     target: 'pino-pretty',
+    level: 'debug',
     options: {
       levelFirst: true,
       translateTime: 'HH:MM:ss Z',
