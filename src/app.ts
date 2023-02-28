@@ -18,6 +18,7 @@ export default (opts?: FastifyServerOptions) => {
   //   dir: path.join(__dirname, 'plugins'),
   //   forceESM: true,
   // });
+
   fastify.register(prismaPlugin);
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);

@@ -3,6 +3,7 @@ import app from './app.js';
 import postModule from './post/index.js';
 import userModule from './user/index.js';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import authModule from './auth/index.js';
 
 const server = app({
   logger,
@@ -10,6 +11,7 @@ const server = app({
 
 server.register(postModule);
 server.register(userModule);
+server.register(authModule);
 
 server.listen({ port: 3000 }, (err, address) => {
   if (err) {

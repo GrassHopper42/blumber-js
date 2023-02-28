@@ -32,6 +32,7 @@ const postServicePlugin = fp(async (fastify) => {
 });
 
 const postModule = fp(async (fastify) => {
+  fastify.log.debug('Registering post module');
   fastify.register(postController, { prefix: '/post' });
   fastify.register(postRepositoryPlugin);
   fastify.register(versionRepositoryPlugin);

@@ -1,7 +1,7 @@
 import { PostVersion } from '@prisma/client';
 import { Post } from '../post.model';
 
-export type PostService = {
+export interface PostService {
   createPost(post: {
     title: string;
     content: string;
@@ -19,4 +19,4 @@ export type PostService = {
   getPostList(): Promise<Post[]>;
   getAllVersions(postId: number): Promise<PostVersion[]>;
   getVersion(postId: number, version: number): Promise<PostVersion | null>;
-};
+}

@@ -12,7 +12,8 @@ export const userRepository = (prisma: PrismaClient): UserRepository => {
       });
       return newUser;
     },
-    find: async (id: number): Promise<User | null> => {
+
+    findById: async (id: number): Promise<User | null> => {
       const user = await prisma.user.findUnique({
         where: {
           id: id,
@@ -20,10 +21,21 @@ export const userRepository = (prisma: PrismaClient): UserRepository => {
       });
       return user;
     },
+
+    findByEmail: async (email: string): Promise<User | null> => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+      return user;
+    },
+
     findAll: async (): Promise<User[]> => {
       const userList = await prisma.user.findMany();
       return userList;
     },
+
     update: async (id: number, user: any): Promise<User> => {
       const updatedUser = await prisma.user.update({
         where: {
@@ -35,6 +47,14 @@ export const userRepository = (prisma: PrismaClient): UserRepository => {
         },
       });
       return updatedUser;
+    },
+
+    delete: async (id: number): Promise<void> => {
+      await prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
     },
   };
 };
