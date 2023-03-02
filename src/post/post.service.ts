@@ -1,11 +1,9 @@
-import { PostRepository } from './interface/post.repository';
-import { PostService } from './interface/post.service';
-import { VersionRepository } from './interface/version.repository';
+import { PostService, PostServiceDependencies } from './interface/post.service';
 
-export const postService = (
-  postRepository: PostRepository,
-  versionRepository: VersionRepository,
-): PostService => {
+export const postService = ({
+  postRepository,
+  versionRepository,
+}: PostServiceDependencies): PostService => {
   return {
     async createPost({ title, content, authorId }) {
       const post = await postRepository.create({ title, authorId });

@@ -25,10 +25,7 @@ const versionRepositoryPlugin: FastifyPluginAsync = fp(async (fastify) => {
 });
 
 const postServicePlugin = fp(async (fastify) => {
-  fastify.decorate(
-    'postService',
-    postService(fastify.postRepository, fastify.versionRepository),
-  );
+  fastify.decorate('postService', postService(fastify));
 });
 
 const postModule = fp(async (fastify) => {

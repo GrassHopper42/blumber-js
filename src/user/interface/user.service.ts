@@ -1,4 +1,9 @@
 import { User } from '../user.model.js';
+import { UserRepository } from './user.repository.js';
+
+export interface UserServiceDependencies {
+  userRepository: UserRepository;
+}
 
 export type UserService = {
   createUser(user: any): Promise<User>;

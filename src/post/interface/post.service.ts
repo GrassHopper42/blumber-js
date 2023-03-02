@@ -1,5 +1,12 @@
 import { PostVersion } from '@prisma/client';
 import { Post } from '../post.model';
+import { PostRepository } from './post.repository';
+import { VersionRepository } from './version.repository';
+
+export interface PostServiceDependencies {
+  postRepository: PostRepository;
+  versionRepository: VersionRepository;
+}
 
 export interface PostService {
   createPost(post: {

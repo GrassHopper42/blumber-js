@@ -18,7 +18,7 @@ const userRepositoryPlugin = fp(async (fastify) => {
 });
 
 const userServicePlugin = fp(async (fastify) => {
-  fastify.decorate('userService', userService(fastify.userRepository));
+  fastify.decorate('userService', userService(fastify));
 });
 
 const userModule = fp(async (fastify: FastifyInstance) => {
