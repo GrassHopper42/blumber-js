@@ -1,0 +1,16 @@
+{
+  "name": "@blumber/root",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "author": "GrassHopper42",
+  "packageManager": "pnpm@7.28.0",
+  "devDependencies": {
+    "pnpm": "^7.28.0"
+  }
+}
